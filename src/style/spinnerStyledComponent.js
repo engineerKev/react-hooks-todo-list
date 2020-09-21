@@ -7,10 +7,10 @@ export const SpinnerDiv = styled.div`
     margin: 3.75rem auto;
     font-size: 0.625rem;
     text-indent: -9999em;
-    border-top: 1.1em solid #ffd700;
-    border-right: 1.1em solid #ffd700;
-    border-bottom: 1.1em solid #ffd700;
-    border-left: 1.1em solid #ff8c00;
+    border-top: 1.1em solid #160f42;
+    border-right: 1.1em solid #160f42;
+    border-bottom: 1.1em solid #160f42;
+    border-left: 1.1em solid #e7f33f;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
