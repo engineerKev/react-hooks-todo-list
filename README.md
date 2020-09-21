@@ -8,11 +8,11 @@ Once you have downloaded / cloned the application simply do:
 
 followed by 
     
-    ```npm run build```
+    npm run build
 
 finally
     
-    ```npm run start```
+    npm run start
 
 
 ## Localhost
