@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext} from 'react';
 
 import mockApi from '../../js/utilities/mockApi';
 import useTodoListDataCruncher from '../customHooks/useTodoListDataCruncher';
 
 import Spinner from '../components/UI/Spinner';
+import { TodoListWrapper, StyledSectionTag } from '../../style/todoListStyledComponents';
 import ListItem from './ListItem';
+import { ThemeContext } from '../context/ThemeContext';
+
 
 const todoList = (props) => {
     const [overdue, due, completed, setData] = useTodoListDataCruncher([]);
-    
+    const { theme } = useContext(ThemeContext);
+
     useEffect(() => {
         const getServerData = async () => {
             const { data: serverData } = await mockApi.get('/get');
@@ -32,13 +36,13 @@ const todoList = (props) => {
     }
 
     const taskCompleted = async (id) => {
-        const {data: patchResponse } = await mockApi.patch(`/patch/${id}`, 
+        mockApi.patch(`/patch/${id}`, 
             {
                 "isComplete": true
             }
-        );
-        updateListData(id);
-        console.log(patchResponse);
+        ).then(() => {
+            updateListData(id);
+        });
     }
 
     const renderListItems = () => {
@@ -49,6 +53,10 @@ const todoList = (props) => {
                     key={`${od.id}-${ix}`} 
                     markComplete={() => taskCompleted(od.id)}
                     completed={od.isComplete}
+                    color={theme.colors.overdue}
+                    textDecoration={theme.textDecorations.overdue}
+                    animations={theme.animations.overdue}
+                    date={od.formattedDate}
                 /> 
             );
         });
@@ -59,7 +67,10 @@ const todoList = (props) => {
                     desc={d.description} 
                     key={`${d.id}-${ix}`} 
                     completed={d.isComplete} 
-                    markComplete={() => taskCompleted(d.id)} 
+                    markComplete={() => taskCompleted(d.id)}
+                    color={theme.colors.due}
+                    textDecoration={theme.textDecorations.due}
+                    date={d.formattedDate}
                 />
             );
         });
@@ -70,15 +81,25 @@ const todoList = (props) => {
                     desc={c.description}
                     key={`${c.id}-${ix}`}
                     completed={c.isComplete}
-                    markComplete={() => {}} />
+                    markComplete={() => {}} 
+                    color={theme.colors.completed}
+                    textDecoration={theme.textDecorations.completed}
+                />
             );
         });
 
-        return [...overDueElements, ...dueElements, ...completedElements, <h1 key={"yoke-key"}>DO STYLING FOR LIST ITEMS(DESC, BUTTON, BORDERS, ALIGNMENT, COLORS FOR COMPLETE, INCOMPLETE, AND OVERDUE)</h1>];
+        return [...overDueElements, ...dueElements, ...completedElements];
     }
 
     return (
-        todoListDataReady() ? renderListItems() : <Spinner />
+        todoListDataReady() ?
+        <StyledSectionTag>
+            <TodoListWrapper>
+                {renderListItems()}
+            </TodoListWrapper> 
+        </StyledSectionTag> 
+        :
+        <Spinner />
     )
 }
 

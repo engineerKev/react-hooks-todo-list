@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import mockApi from '../utilities/mockApi';
+import {
+    ListItem,
+    ListItemButton,
+    ListItemDescription
+} from '../../style/listItemStyledComponents';
 
-const listItem = (props) => {
+const listItem = ({
+    animations = {}, 
+    color, 
+    textDecoration,
+    date,
+    ...rest}) => {
+    
+    const [hovering, setHoveringBit] = useState(false);
+    const [done, setDone] = useState('done?');
+
+    const { animation = ``, keyframes = `` } = animations;
+
+    const doneButtonClick = () => {
+        setDone('done!');
+        rest.markComplete();
+    }
+    
     return (
-        <div>
-            <div>{props.desc}</div>
-            {props.completed ? null : <button onClick={props.markComplete}>done</button>}
-        </div>
+        <ListItem>
+            <ListItemDescription color={color} textDecoration={textDecoration} animation={animation} keyframes={keyframes}>{rest.desc}</ListItemDescription>
+            {rest.completed ? 
+                null 
+                : 
+                <ListItemButton onClick={doneButtonClick} color={color} onMouseEnter={() => setHoveringBit(true)} onMouseLeave={() => setHoveringBit(false)}>
+                    <div className={hovering ? 'fade-out' : ''}>{ date }</div>
+                    <div className={hovering ? 'fade-in' : ''}>{ done }</div>
+                </ListItemButton>}
+        </ListItem>
     )   
 }
 
